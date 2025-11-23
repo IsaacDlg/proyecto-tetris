@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Tetris</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="game-container">
+        <div class="game-info left-panel">
+            <div class="info-box">
+                <h2>NIVEL</h2>
+                <span id="level">1</span>
+            </div>
+            <div class="info-box">
+                <h2>LÍNEAS</h2>
+                <span id="lines">0</span>
+            </div>
+        </div>
+
+        <div class="game-board-container">
+            <canvas id="tetris" width="240" height="400"></canvas>
+            <div id="game-over" class="hidden">
+                <h2>GAME OVER</h2>
+                <p>Puntuación: <span id="final-score">0</span></p>
+                <button id="restart-btn">Jugar de Nuevo</button>
+            </div>
+            <div id="start-screen">
+                <h1>NEON TETRIS</h1>
+                <p>Usa las flechas para moverte</p>
+                <p>↑ para rotar</p>
+                <button id="start-btn">COMENZAR</button>
+            </div>
+        </div>
+
+        <div class="game-info right-panel">
+            <div class="info-box">
+                <h2>PUNTOS</h2>
+                <span id="score">0</span>
+            </div>
+            <div class="info-box">
+                <h2>SIGUIENTE</h2>
+                <canvas id="next-piece" width="80" height="80"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="audio.js"></script>
+    <script src="swipe.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>

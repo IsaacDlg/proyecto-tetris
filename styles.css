@@ -1,0 +1,165 @@
+:root {
+    --bg-color: #0a0a12;
+    --grid-bg: #111;
+    --neon-blue: #00f3ff;
+    --neon-pink: #ff00ff;
+    --neon-green: #00ff00;
+    --neon-yellow: #ffff00;
+    --neon-purple: #bc13fe;
+    --text-color: #fff;
+    --border-color: #333;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Orbitron', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.game-container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.game-board-container {
+    position: relative;
+    border: 2px solid var(--neon-blue);
+    box-shadow: 0 0 15px var(--neon-blue), inset 0 0 15px var(--neon-blue);
+    background-color: var(--grid-bg);
+}
+
+canvas#tetris {
+    display: block;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.game-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 120px;
+}
+
+.info-box {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border: 1px solid var(--neon-purple);
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(188, 19, 254, 0.3);
+}
+
+.info-box h2 {
+    margin: 0 0 10px 0;
+    font-size: 1rem;
+    color: var(--neon-pink);
+    text-shadow: 0 0 5px var(--neon-pink);
+}
+
+.info-box span {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--neon-green);
+    text-shadow: 0 0 5px var(--neon-green);
+}
+
+#next-piece {
+    background-color: rgba(0, 0, 0, 0.3);
+    margin: 0 auto;
+    display: block;
+    border: 1px solid var(--border-color);
+}
+
+#start-screen,
+#game-over {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 18, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    text-align: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: var(--neon-blue);
+    text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
+    margin-bottom: 20px;
+}
+
+button {
+    background: transparent;
+    color: var(--neon-yellow);
+    border: 2px solid var(--neon-yellow);
+    padding: 10px 30px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px var(--neon-yellow);
+    box-shadow: 0 0 10px var(--neon-yellow);
+}
+
+button:hover {
+    background: var(--neon-yellow);
+    color: #000;
+    box-shadow: 0 0 20px var(--neon-yellow);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .game-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        transform: scale(0.8);
+    }
+
+    .game-info {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .left-panel,
+    .right-panel {
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    .info-box {
+        padding: 5px;
+        min-width: 80px;
+    }
+
+    .info-box h2 {
+        font-size: 0.8rem;
+    }
+
+    .info-box span {
+        font-size: 1rem;
+    }
+}
