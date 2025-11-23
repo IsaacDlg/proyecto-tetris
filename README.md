@@ -7,7 +7,7 @@ A modern, neon-styled Tetris game built with Vanilla JavaScript. Experience the 
 ## 🚀 Live Demo
 
 Play the game directly in your browser:
-👉 **[https://isaacdlg1-ship-it.github.io/proyecto-tetris/](https://isaacdlg1-ship-it.github.io/proyecto-tetris/)**
+👉 **[https://isaacdlg.github.io/proyecto-tetris/](https://isaacdlg.github.io/proyecto-tetris/)**
 
 ## ✨ Features
 
@@ -36,7 +36,7 @@ To run this project locally:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/isaacdlg1-ship-it/proyecto-tetris.git
+   git clone https://github.com/IsaacDlg/proyecto-tetris.git
    ```
 
 2. **Navigate to the project directory**
