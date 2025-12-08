@@ -106,9 +106,95 @@ window.audio = {
     musicOsc: null,
     musicGain: null,
     isPlaying: false,
+    introInterval: null,
+
+    playIntroMusic() {
+        try {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            // Synthwave Arpeggio (Stranger Things style)
+            // C Major 7th Pattern: C - E - G - B - C...
+            const notes = [
+                130.81, // C3
+                164.81, // E3
+                196.00, // G3
+                246.94, // B3
+                261.63, // C4
+                246.94, // B3
+                196.00, // G3
+                164.81  // E3
+            ];
+
+            let noteIndex = 0;
+            const noteDuration = 0.15; // Fast arpeggio
+
+            const playArpNote = () => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                // Sawtooth for that 80s synth sound
+                osc.type = OSC_SAWTOOTH;
+                osc.frequency.value = notes[noteIndex];
+
+                // Filter for "Analog" feel
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 800;
+                filter.Q.value = 5;
+
+                // Envelope
+                gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.02); // Attack
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + noteDuration); // Decay
+
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(masterGain);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + noteDuration);
+
+                noteIndex = (noteIndex + 1) % notes.length;
+            };
+
+            playArpNote(); // Play first immediately
+            this.introInterval = setInterval(playArpNote, noteDuration * 1000);
+
+        } catch (e) { console.error(e); }
+    },
+
+    stopIntroMusic() {
+        if (this.introInterval) {
+            clearInterval(this.introInterval);
+            this.introInterval = null;
+        }
+    },
+
+    playClick() {
+        try {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            // UI confirmation blip
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = OSC_SQUARE;
+            osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.1);
+
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+
+            osc.connect(gain);
+            gain.connect(masterGain);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
+        } catch (e) { console.error(e); }
+    },
 
     startMusic() {
         try {
+            this.stopIntroMusic(); // Ensure intro stops
             if (this.isPlaying) return;
             if (audioCtx.state === 'suspended') audioCtx.resume();
             this.isPlaying = true;

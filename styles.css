@@ -22,6 +22,101 @@ body {
     overflow: hidden;
 }
 
+#welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease;
+}
+
+#welcome-screen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.blink {
+    animation: blinker 1.5s linear infinite;
+    color: var(--neon-blue);
+    margin: 20px 0;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+.level-selector {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2rem;
+}
+
+.selector-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.level-selector input {
+    background: transparent;
+    border: none;
+    color: var(--neon-yellow);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    width: 40px;
+    padding: 5px;
+    text-align: center;
+    /* Hide arrows */
+    -moz-appearance: textfield;
+}
+
+.level-selector input::-webkit-outer-spin-button,
+.level-selector input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.level-btn {
+    background: transparent;
+    color: var(--neon-blue);
+    border: 1px solid var(--neon-blue);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+    margin: 0;
+    box-shadow: 0 0 5px var(--neon-blue);
+    transition: all 0.2s;
+    text-shadow: none;
+}
+
+.level-btn:hover {
+    background: var(--neon-blue);
+    color: #000;
+    box-shadow: 0 0 15px var(--neon-blue);
+}
+
+.level-btn:active {
+    transform: scale(0.9);
+}
+
 .game-container {
     display: flex;
     gap: 20px;
@@ -83,7 +178,8 @@ canvas#tetris {
 }
 
 #start-screen,
-#game-over {
+#game-over,
+#pause-screen {
     position: absolute;
     top: 0;
     left: 0;

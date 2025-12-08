@@ -10,6 +10,12 @@
 </head>
 
 <body>
+    <div id="welcome-screen">
+        <h1 class="neon-text">NEON TETRIS</h1>
+        <p class="blink">Haz click para entrar</p>
+        <button id="enter-btn">ENTRAR AL SISTEMA</button>
+    </div>
+
     <div class="game-container">
         <div class="game-info left-panel">
             <div class="info-box">
@@ -28,9 +34,22 @@
                 <h2>GAME OVER</h2>
                 <p>Puntuación: <span id="final-score">0</span></p>
                 <button id="restart-btn">Jugar de Nuevo</button>
+                <button id="menu-btn">Menú Principal</button>
+            </div>
+            <div id="pause-screen" class="hidden">
+                <h2>PAUSA</h2>
+                <p>Presiona ENTER para continuar</p>
             </div>
             <div id="start-screen">
                 <h1>NEON TETRIS</h1>
+                <div class="level-selector">
+                    <label>Nivel Inicial:</label>
+                    <div class="selector-controls">
+                        <button id="level-down" class="level-btn">‹</button>
+                        <input type="number" id="start-level" min="1" max="10" value="1" readonly>
+                        <button id="level-up" class="level-btn">›</button>
+                    </div>
+                </div>
                 <p>Usa las flechas para moverte</p>
                 <p>↑ para rotar</p>
                 <button id="start-btn">COMENZAR</button>

@@ -83,6 +83,7 @@ let dropInterval = 1000;
 let lastTime = 0;
 let isPaused = true;
 let isGameOver = false;
+let isGameRunning = false;
 
 function createMatrix(w, h) {
     const matrix = [];
@@ -91,6 +92,7 @@ function createMatrix(w, h) {
     }
     return matrix;
 }
+
 
 function collide(arena, player) {
     const m = player.matrix;
@@ -284,16 +286,73 @@ function gameOver() {
     document.getElementById('final-score').innerText = player.score;
 }
 
+// Button Listeners
+document.getElementById('start-btn').addEventListener('click', () => {
+    resetGame();
+});
+
+document.getElementById('restart-btn').addEventListener('click', () => {
+    resetGame();
+});
+
+document.getElementById('menu-btn').addEventListener('click', () => {
+    document.getElementById('game-over').classList.add('hidden');
+    document.getElementById('start-screen').classList.remove('hidden');
+    isGameOver = false; // Reset flag so keys don't get blocked if we type/move
+    isGameRunning = false; // Ensure game is treated as stopped
+    if (window.audio) {
+        window.audio.stopMusic();
+        window.audio.playIntroMusic();
+    }
+});
+
+document.getElementById('enter-btn').addEventListener('click', () => {
+    const welcomeScreen = document.getElementById('welcome-screen');
+    welcomeScreen.classList.add('fade-out');
+    if (window.audio) window.audio.playIntroMusic();
+    setTimeout(() => {
+        welcomeScreen.style.display = 'none';
+    }, 500);
+});
+
+// Global Button Sound
+document.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+        if (window.audio) window.audio.playClick();
+    }
+});
+
+document.getElementById('level-up').addEventListener('click', () => {
+    const input = document.getElementById('start-level');
+    const val = parseInt(input.value) || 1;
+    if (val < 10) input.value = val + 1;
+});
+
+document.getElementById('level-down').addEventListener('click', () => {
+    const input = document.getElementById('start-level');
+    const val = parseInt(input.value) || 1;
+    if (val > 1) input.value = val - 1;
+});
+
 function resetGame() {
     arena.forEach(row => row.fill(0));
     player.score = 0;
     player.lines = 0;
-    player.level = 1;
+
+    // Get starting level from input
+    const startLevelInput = document.getElementById('start-level');
+    player.level = parseInt(startLevelInput.value) || 1;
+
     player.next = null;
-    dropInterval = 1000;
+
+    // Set drop interval based on level (same logic as arenaSweep)
+    const speeds = [1000, 850, 700, 600, 500, 400, 300, 200, 150, 100];
+    dropInterval = speeds[Math.min(player.level, 10) - 1] || 1000;
+
     updateScore();
     isGameOver = false;
     isPaused = false;
+    isGameRunning = true;
     document.getElementById('game-over').classList.add('hidden');
     document.getElementById('start-screen').classList.add('hidden');
     if (window.audio) window.audio.startMusic();
@@ -315,9 +374,71 @@ function update(time = 0) {
     requestAnimationFrame(update);
 }
 
-// Controls
+// Mobile Soft Drop Logic
+let originalInterval = 1000;
+document.addEventListener('touchstart', (e) => {
+    if (isPaused || isGameOver) return;
+    // Don't trigger if touching buttons
+    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
+
+    // Store current interval to restore later
+    originalInterval = dropInterval;
+    dropInterval = 50; // Fast drop speed
+}, { passive: false });
+
+document.addEventListener('touchend', (e) => {
+    if (isPaused || isGameOver) return;
+    // Restore original speed based on level
+    const speeds = [1000, 850, 700, 600, 500, 400, 300, 200, 150, 100];
+    dropInterval = speeds[Math.min(player.level, 10) - 1] || 1000;
+}, { passive: false });
+
+function togglePause() {
+    if (isGameOver || !isGameRunning) return;
+
+    isPaused = !isPaused;
+    const pauseScreen = document.getElementById('pause-screen');
+
+    if (isPaused) {
+        pauseScreen.classList.remove('hidden');
+        if (window.audio) window.audio.stopMusic();
+    } else {
+        pauseScreen.classList.add('hidden');
+        if (window.audio) window.audio.startMusic();
+        update();
+    }
+}
+
 document.addEventListener('keydown', event => {
-    if (isGameOver) return;
+    // Menu Controls (When game is NOT running)
+    if (!isGameRunning && !document.getElementById('welcome-screen').matches(':not([style*="display: none"])')) {
+        // Ensure we are past the welcome screen (simple check via display none or class)
+        // Actually, checking if start-screen is visible logic:
+        const startScreen = document.getElementById('start-screen');
+        if (!startScreen.classList.contains('hidden')) {
+            if (['ArrowLeft', 'ArrowRight', 'Enter'].includes(event.key)) {
+                event.preventDefault();
+            }
+
+            if (event.key === 'ArrowRight') {
+                document.getElementById('level-up').click();
+                return;
+            } else if (event.key === 'ArrowLeft') {
+                document.getElementById('level-down').click();
+                return;
+            } else if (event.key === 'Enter') {
+                resetGame();
+                return;
+            }
+        }
+    }
+
+    if (event.key === 'Enter' && isGameRunning) {
+        togglePause();
+        return;
+    }
+
+    if (isGameOver || isPaused || !isGameRunning) return;
 
     // Prevent default scrolling for arrow keys
     if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
@@ -338,15 +459,6 @@ document.addEventListener('keydown', event => {
             playerRotate(1);
             break;
     }
-});
-
-// Button Listeners
-document.getElementById('start-btn').addEventListener('click', () => {
-    resetGame();
-});
-
-document.getElementById('restart-btn').addEventListener('click', () => {
-    resetGame();
 });
 
 

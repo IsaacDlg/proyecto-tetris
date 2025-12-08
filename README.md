@@ -23,7 +23,7 @@ Play the game directly in your browser:
 - **⬅️ Left Arrow**: Move Left
 - **➡️ Right Arrow**: Move Right
 - **⬇️ Down Arrow**: Soft Drop
-- **⬆️ Up Arrow**: Rotate Piece
+- **⬆️ Up Arrow**: Rotate Piece 
 
 ### Mobile (Touch)
 - **Swipe Left/Right**: Move Piece
