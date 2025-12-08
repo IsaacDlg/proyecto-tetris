@@ -52,4 +52,4 @@ To run this project locally:
 This project is open source and available under the [MIT License](LICENSE).
 
 ---
-*Created with ❤️ by [Your Name]*
+*Created with ❤️ by IsaacDlg*
