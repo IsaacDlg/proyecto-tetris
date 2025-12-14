@@ -374,24 +374,58 @@ function update(time = 0) {
     requestAnimationFrame(update);
 }
 
-// Mobile Soft Drop Logic
-let originalInterval = 1000;
-document.addEventListener('touchstart', (e) => {
-    if (isPaused || isGameOver) return;
-    // Don't trigger if touching buttons
-    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
+// Mobile Controls Logic
+function setupMobileControls() {
+    const addTouchListener = (id, action) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
 
-    // Store current interval to restore later
-    originalInterval = dropInterval;
-    dropInterval = 50; // Fast drop speed
-}, { passive: false });
+        btn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Prevent ghost clicks
+            if (isGameOver || isPaused || !isGameRunning) return;
+            action();
+            if (window.navigator.vibrate) window.navigator.vibrate(50); // Haptic feedback
+        }, { passive: false });
 
-document.addEventListener('touchend', (e) => {
-    if (isPaused || isGameOver) return;
-    // Restore original speed based on level
-    const speeds = [1000, 850, 700, 600, 500, 400, 300, 200, 150, 100];
-    dropInterval = speeds[Math.min(player.level, 10) - 1] || 1000;
-}, { passive: false });
+        // Also support click for testing on desktop with mouse
+        btn.addEventListener('click', (e) => {
+            if (isGameOver || isPaused || !isGameRunning) return;
+            action();
+        });
+    };
+
+    addTouchListener('btn-left', () => playerMove(-1));
+    addTouchListener('btn-right', () => playerMove(1));
+    addTouchListener('btn-down', () => playerDrop());
+    addTouchListener('btn-rotate', () => playerRotate(1));
+
+    // Resume button in Pause Menu
+    const resumeBtn = document.getElementById('resume-btn');
+    if (resumeBtn) {
+        resumeBtn.addEventListener('click', () => {
+            if (isPaused) togglePause();
+        });
+        resumeBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (isPaused) togglePause();
+        }, { passive: false });
+    }
+
+    // Mobile Pause Button
+    const mobilePauseBtn = document.getElementById('mobile-pause-btn');
+    if (mobilePauseBtn) {
+        mobilePauseBtn.addEventListener('click', () => {
+            if (isGameRunning && !isGameOver) togglePause();
+        });
+        mobilePauseBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (isGameRunning && !isGameOver) togglePause();
+        }, { passive: false });
+    }
+}
+
+// Initialize mobile controls
+setupMobileControls();
 
 function togglePause() {
     if (isGameOver || !isGameRunning) return;

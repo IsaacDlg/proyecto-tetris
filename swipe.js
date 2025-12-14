@@ -7,11 +7,17 @@ const minSwipeDistance = 30; // Minimum distance for a swipe
 const maxTapDistance = 10;   // Maximum distance for a tap
 
 document.addEventListener('touchstart', e => {
+    // Ignore touches on controls/buttons to prevent conflict
+    if (e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.tagName === 'INPUT') return;
+
     touchStartX = e.changedTouches[0].screenX;
     touchStartY = e.changedTouches[0].screenY;
 }, { passive: false });
 
 document.addEventListener('touchend', e => {
+    // Ignore touches on controls/buttons
+    if (e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.tagName === 'INPUT') return;
+
     touchEndX = e.changedTouches[0].screenX;
     touchEndY = e.changedTouches[0].screenY;
     handleGesture();

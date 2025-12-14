@@ -225,37 +225,199 @@ button:hover {
     box-shadow: 0 0 20px var(--neon-yellow);
 }
 
+/* Mobile Controls */
+.mobile-controls {
+    display: none;
+    /* Default hidden on desktop */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    /* Allow clicks to pass through container directly */
+    z-index: 20;
+}
+
+.d-pad,
+.action-btn {
+    pointer-events: auto;
+    /* Re-enable clicks on controls */
+}
+
+.control-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid var(--neon-blue);
+    color: var(--neon-blue);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    touch-action: manipulation;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.control-btn:active {
+    background: var(--neon-blue);
+    color: #000;
+    transform: scale(0.95);
+}
+
+.rotate-btn {
+    border-color: var(--neon-pink);
+    color: var(--neon-pink);
+    width: 70px;
+    height: 70px;
+}
+
+.rotate-btn:active {
+    background: var(--neon-pink);
+}
+
+.mobile-only-btn {
+    display: none;
+}
+
 /* Responsive Design */
 @media (max-width: 600px) {
     .game-container {
         flex-direction: column;
         align-items: center;
         gap: 10px;
-        transform: scale(0.8);
+        /* Remove scale transform and use proper sizing */
+        transform: none;
+        width: 100%;
+        height: 100vh;
+        justify-content: space-between;
+        padding: 10px;
+        box-sizing: border-box;
     }
 
     .game-info {
         flex-direction: row;
         width: 100%;
         justify-content: space-between;
+        min-width: unset;
+    }
+
+    .game-board-container {
+        /* Board takes up most vertical space */
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-height: 70vh;
+    }
+
+    canvas#tetris {
+        height: 100%;
+        width: auto;
+        /* Maintain aspect ratio handled by canvas attributes, 
+           max-width ensures it doesn't overflow horizontally */
+        max-width: 100%;
+        object-fit: contain;
+    }
+
+    .mobile-controls {
+        display: block;
+    }
+
+    .d-pad {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+    }
+
+    .action-btn {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    /* Layout specific for controls positioning */
+    #btn-down {
+        order: 2;
+    }
+
+    #btn-left {
+        order: 1;
+    }
+
+    #btn-right {
+        order: 3;
+    }
+
+    .desktop-hint {
+        display: none;
+    }
+
+    .mobile-only-btn {
+        display: block;
+        padding: 5px 15px;
+        margin: 0;
+        font-size: 1rem;
     }
 
     .left-panel,
     .right-panel {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .right-panel {
+        /* Move score/next piece to top or bottom? 
+           Let's put top stats in one row and next piece at bottom or hidden?
+           Actually, space is tight. Let's put everything at top.
+        */
+        order: -1;
+    }
+
+    /* Reorganize top layout: Left Panel (Level/Lines) + Right Panel (Score/Next) */
+    .game-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto 1fr;
+        /* Areas:
+           InfoL InfoR
+           Board Board
+        */
+        grid-template-areas:
+            "top stats"
+            "board board";
+    }
+
+    .left-panel {
+        grid-area: top;
         flex-direction: row;
-        gap: 10px;
+    }
+
+    .right-panel {
+        grid-area: stats;
+        flex-direction: row;
+        order: unset;
+    }
+
+    .game-board-container {
+        grid-area: board;
     }
 
     .info-box {
         padding: 5px;
-        min-width: 80px;
+        min-width: 60px;
     }
 
-    .info-box h2 {
-        font-size: 0.8rem;
-    }
-
-    .info-box span {
-        font-size: 1rem;
+    h1 {
+        font-size: 2rem;
     }
 }
